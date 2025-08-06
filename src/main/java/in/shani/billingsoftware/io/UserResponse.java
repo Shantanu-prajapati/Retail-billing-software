@@ -16,7 +16,8 @@ public class UserResponse {
     private String userId;
     private String name;
     private String email;
-    private String password;
+    // ye dekhna agr kabhi password issue aye
+
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private String role;
