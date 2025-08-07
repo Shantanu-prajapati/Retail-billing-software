@@ -4,6 +4,7 @@ import in.shani.billingsoftware.entity.CategoryEntity;
 import in.shani.billingsoftware.io.CategoryRequest;
 import in.shani.billingsoftware.io.CategoryResponse;
 import in.shani.billingsoftware.repository.CategoryRepository;
+import in.shani.billingsoftware.repository.ItemRepository;
 import in.shani.billingsoftware.service.CategoryService;
 import in.shani.billingsoftware.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     private final CategoryRepository categoryRepository;
     private final FileUploadService fileUploadService;
+    private final ItemRepository itemRepository;
 
     @Override
     public CategoryResponse add(CategoryRequest request, MultipartFile file) {
@@ -47,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     private CategoryResponse convertToResponse(CategoryEntity newCategory) {
+       Integer itemsCount= itemRepository.countByCategoryId(newCategory.getId());
        return CategoryResponse.builder()
                 .categoryId(newCategory.getCategoryId())
                 .name(newCategory.getName())
@@ -55,6 +58,7 @@ public class CategoryServiceImpl implements CategoryService{
                 .imgUrl(newCategory.getImgUrl())
                 .createdAt(newCategory.getCreatedAt())
                 .updatedAt(newCategory.getUpdatedAt())
+               .items(itemsCount)
                 .build();
     }
 
