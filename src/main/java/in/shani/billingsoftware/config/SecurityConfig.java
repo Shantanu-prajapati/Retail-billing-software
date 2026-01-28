@@ -1,5 +1,5 @@
 package in.shani.billingsoftware.config;
-
+import org.springframework.http.HttpMethod;
 import in.shani.billingsoftware.filter.JwtRequestFilter;
 import in.shani.billingsoftware.service.impl.AppUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +36,16 @@ private final JwtRequestFilter jwtRequestFilter;
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/login","/encode").permitAll()
-                        .requestMatchers("/categories", "/items").hasAnyRole("USER", "ADMIN")
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login","/encode").permitAll()
+                        //  PUBLIC GET APIs (for demo//check)
+                        .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/items/**").permitAll()
+
+                        .requestMatchers("/orders/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/categories/**", "/items/**")
+                        .hasAnyRole("USER", "ADMIN")
+
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
 
